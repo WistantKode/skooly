@@ -230,7 +230,7 @@ class AttendanceCheckIn {
     );
     
     if (distance > session.location.radius) {
-      throw new Error('Vous êtes trop loin du campus');
+      throw new Error('Vous êtes trop loin de votre salle de classe');
     }
     
     // 4. Vérifier timing
