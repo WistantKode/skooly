@@ -25,25 +25,42 @@ Tout est cloné : les filières, les cours, les salles. Il n'a plus qu'à ajuste
 
 ---
 
-## 👥 2. L'Onboarding Humain (Peupler le Système)
+## 👥 2. Identité & Accès (Qui est Qui ?)
 
-### Q: Comment enregistrer le Personnel (Enseignants, Cadres) ?
-**Réponse :** Invitation par Email (Flow Sécurisé).
+### Q: Les enseignants utilisent-ils leur Gmail perso ?
+**Réponse :** OUI et NON. Stratégie Hybride.
 
-1.  **RH initie** : Saisie Email + Rôle ("Enseignant") + Département.
-2.  **Système** : Envoie un lien d'invitation unique (Magique).
-3.  **Utilisateur** : Clique -> Définit son mot de passe -> Complète son profil (Photo, RIB, Bio).
-4.  **Validation** : Le RH valide le profil complet -> `Status: ACTIVE`.
+1.  **Enseignants Permanents** : On leur impose l'email institutionnel (`@univ-douala.cm`). C'est pro, c'est carré.
+2.  **Vacataires (60% du staff)** : Ils ont déjà 4 adresses mail. On accepte leur **Gmail/Yahoo**.
+    *   *Sécurité* : On ne leur envoie jamais de mot de passe par mail. On envoie un "Magic Link" qui expire en 1h.
 
-*Pourquoi pas de création manuelle par l'Admin ?* Pour éviter les erreurs de saisie de mot de passe et responsabiliser l'utilisateur.
+### Q: Comment gérer les Rôles (RBAC) ?
+On ne donne pas "Toutes les clés" à tout le monde.
+Skooly utilise des **Rôles Cumulatifs**.
 
-### Q: Comment enregistrer les Étudiants ?
-**Réponse :** Deux voies.
-1.  **Masse (Première fois)** : Import Excel via le *Wizard* (`Module Data Management`).
-2.  **Au fil de l'eau (Candidats)** :
-    *   Le candidat crée un compte "Prospect" sur le portail public.
-    *   Il paie ses frais de concours (Mobile Money).
-    *   Si admis, son compte "Prospect" mute en compte "Étudiant".
+*   M. Talla est **Enseignant** (voit ses cours) ET **Chef de Département** (voit tous les cours du départment).
+*   **Workflow d'Attribution** :
+    1.  RH crée la fiche "Partner" (La personne physique).
+    2.  RH ajoute le rôle "Teacher" -> Accès App Prof.
+    3.  Admin ajoute le rôle "HeadOfDept(GenieInfo)" -> Accès Dashboard Admin (Restreint).
+
+### Q: Tracking - Qui a fait quoi ? (L'Espion)
+Chaque action sensible laisse une trace indélébile (Audit Trail).
+
+*   **Le Cas :** Un enseignant change une note de 08/20 à 12/20.
+*   **Le Log (Database) :**
+    ```json
+    {
+      "event": "GRADE_UPDATED",
+      "who": "user_id_123 (Prof. Talla)",
+      "when": "2024-12-31T14:00:00Z",
+      "target": "grade_id_999 (Etudiant Kamga)",
+      "diff": { "old": 8, "new": 12 },
+      "ip": "192.168.1.55",
+      "reason": "Erreur de report (Copie vérifiée)"
+    }
+    ```
+*   **La Vue Admin :** "Historique des modifications" sur chaque fiche étudiant. Impossible de tricher sans être vu.
 
 ---
 
@@ -68,16 +85,8 @@ Le système ne lie pas "Une salle à un programme". Il lie :
 
 ## 🔄 4. La Synchronisation Externe (Le Cas du Paiement UBA)
 
-### Q: Comment le système sait qu'un élève a payé si c'est géré par UBA ?
+### Q: Comment le système sait qu'un élève a payé ?
 **Réponse :** Le principe de la **Réconciliation Asynchrone**.
-
-Le système ne "sait" pas instantanément. Il "apprend".
-
-**État Initial :**
-*   Étudiant : Inscrit.
-*   Facture Scolarité : 50,000 FCFA.
-*   Status : `WAITING_PAYMENT`.
-*   Droits : Accès limité (Pas de carte, pas de certificat).
 
 **L'Événement Déclencheur (Le Pont UBA) :**
 1.  L'étudiant paie à la banque. Il reçoit un reçu papier.
@@ -86,14 +95,8 @@ Le système ne "sait" pas instantanément. Il "apprend".
     *   Lit le fichier UBA.
     *   Cherche le Matricule dans le fichier.
     *   Trouve la Facture correspondante.
-    *   Crée un `Payment` interne.
     *   Passe la Facture à `PAID`.
 
 **Conséquence (Event Driven) :**
 *   L'événement `InvoicePaid` est émis.
 *   Le module **AccessControl** écoute -> Débloque l'impression de la carte.
-*   Le module **Notification** écoute -> Envoie un SMS "Paiement reçu ✅".
-
-### Q: Et si l'étudiant ment (Faux reçu) ?
-Il peut uploader une photo de faux reçu dans l'app, mais le statut restera `PENDING_VERIFICATION` tant que le fichier officiel de la banque ne confirme pas.
-**La banque est la seule source de vérité.**
