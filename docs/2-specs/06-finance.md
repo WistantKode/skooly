@@ -1,54 +1,68 @@
-# 💰 Module Finance : La Comptabilité à Double Entrée
+# 💰 Module Finance : Le Système Hybride (UBA + Mobile Money)
 
-## La Philosophie Odoo appliquée aux Frais Scolaires
+## La Réalité Camerounaise
+L'Université de Douala ne blague pas avec l'argent.
+La scolarité (tranches de 50,000 FCFA) passe OBLIGATOIREMENT par la banque (**UBA**, Compte Trésor).
+Les "petits frais" (Concours, Certificats, Pénalités) peuvent passer par Mobile Money.
 
-Oubliez la table `payments` avec une colonne `status`. C'est amateur.
-Dans Skooly (comme dans Odoo), **TOUT est une écriture comptable (`Journal Entry`)**.
+Skooly doit réconcilier ces deux mondes.
 
-## Entités Principales ("Models")
+---
 
-### 1. `Invoice` (Facture - `account.move`)
-Une inscription en L1 génère une FACTURE.
-*   **Débit** : Compte Client (Étudiant X) -> 50,000 FCFA
-*   **Crédit** : Compte Produit (Scolarité) -> 50,000 FCFA
-*   **Status** : `DRAFT` -> `POSTED` (Validé) -> `PAID` (Soldé).
+## 1. UBA Integration (Le "Guichet Unique")
 
-### 2. `Payment` (Paiement - `account.payment`)
-Quand MTN Mobile Money nous envoie de l'argent.
-*   **Débit** : Compte Banque (MTN MoMo) -> 50,000 FCFA
-*   **Crédit** : Compte Client (Étudiant X) -> 50,000 FCFA
+### Le Workflow Étudiant
+1.  L'étudiant va à l'agence UBA (ou utilise l'app UBA).
+2.  Il verse 50,000 au guichet avec son matricule Skooly.
+3.  Le caissier lui remet un **Reçu Bancaire (Bordereau)** avec un numéro de transaction (`TRX-1234`).
+4.  L'étudiant se connecte à Skooly -> Onglet "Paiements".
+5.  Il saisit `TRX-1234` et uploade la photo du reçu.
 
-### 3. La Réconciliation (Le Magie)
-Au départ, la facture est "Impayée".
-Le paiement est "Non lettré".
-Le système lie les deux : `Invoice.amount_residual` devient 0. La facture passe à **PAID**.
+### Le Workflow Comptable (Réconciliation)
+Skooly ne croit pas l'étudiant sur parole.
+1.  Chaque soir, le Comptable uploade le **Fichier Relevé UBA (Excel/CSV)** dans Skooly.
+2.  **Matching Automatique** :
+    *   Le système cherche `TRX-1234` dans le fichier banque.
+    *   Si trouvé et montant correspond -> ✅ **VALIDATED**.
+    *   Si non trouvé -> ⏳ **PENDING_BANK_CHECK**.
 
-## Intégration Mobile Money (MTN / Orange)
+### Schéma de Données (Dual Ledger)
+*   `BankStatementLine` : La vérité de la banque.
+*   `StudentPaymentClaim` : La déclaration de l'étudiant.
+*   `Reconciliation` : Le lien entre les deux.
 
-### Le Problème de la Réalité
-L'API MTN peut dire "Succès", mais l'argent n'est pas là. Ou l'inverse.
-Skooly utilise un **Journal de Transition**.
+---
 
-1.  **RequestToPay** : On crée un paiement en statut `PENDING`.
-2.  **Webhook** : MTN appelle Skooly -> "Transaction X Réussie".
-3.  **Validation** : Skooly passe le paiement à `POSTED` et réconcilie la facture.
+## 2. Mobile Money (Native Integration)
 
-### Gestion de l'Échec
-Si MTN échoue, le paiement passe à `REJECTED`. La facture reste `OPEN`.
-L'étudiant voit toujours "Impayé".
+Pour les frais < 10,000 FCFA (Relevés, Attestations, Badge perdu).
+Ici, c'est **Temps Réel**.
 
-## Pourquoi c'est mieux ?
-*   **Audit** : On sait exactement combien d'argent est "En cours chez MTN" vs "En banque".
-*   **Tranches** : Si l'étudiant paie 20,000 sur 50,000, la facture reste `OPEN` avec un résiduel de 30,000. C'est natif.
+1.  Skooly appelle l'API MTN MoMo / Orange Money.
+2.  L'étudiant tape son code PIN.
+3.  Confirmation instantanée (Webhook).
+4.  Pas de réconciliation manuelle nécessaire.
 
-## Code Snippet (Structure)
+---
 
-```typescript
-interface JournalEntry {
-  id: string;
-  type: 'invoice' | 'payment';
-  date: Date;
-  lines: JournalItem[]; // Débit/Crédit
-  state: 'draft' | 'posted';
-}
-```
+## 3. Plan Comptable (Odoo Style)
+
+Skooly gère ça comme des écritures comptables rigoureuses.
+
+| Journal | Débit | Crédit | Compte |
+| :--- | :--- | :--- | :--- |
+| **Vente** | Client (Étudiant) | Vente (Scolarité) | 50,000 |
+| **Banque (UBA)** | Banque UBA | Client (Étudiant) | 50,000 |
+
+*   Si le paiement Mobile Money échoue, la dette reste.
+*   Si le paiement UBA est rejeté (faux bordereau), la dette reste.
+
+## 4. Architecture Technique
+
+### Adapter : `UbaFileParser`
+Un service spécialisé pour parser les CSV exotiques de UBA.
+*   Détecte les colonnes "Date", "Val", "Libellé", "Montant".
+*   Gère les doublons (Idempotence).
+
+### Adapter : `MobileMoneyGateway`
+Une abstraction pour switcher entre MTN, Orange, et Express Union.
