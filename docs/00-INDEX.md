@@ -25,6 +25,7 @@ Cette documentation est la **Source de Vérité**. Si ce n'est pas écrit ici, �
 *   **[02. Guide de Traduction Odoo](./3-technical/02-odoo-translation.md)** : Comment porter le génie d'Odoo vers NestJS.
 *   **[20. Stack Technique](./3-technical/20-stack.md)** : Next.js, NestJS, Prisma, Docker.
 *   **[21. Schema Database](./3-technical/21-database-schema.md)** : Modèles de données (Users, Finance, Academic).
+*   **[30. Stratégie UI/UX](./3-technical/30-ui-strategy.md)** : L'OS Éducatif (Design System Premium).
 
 ---
 
