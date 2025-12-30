@@ -1,195 +1,59 @@
-# ERP IUT Douala - Documentation Technique
+# 📚 Skooly - Documentation Officielle
 
-**Version**: 0.0 | **Date**: 28 Décembre 2024
+**Version**: 1.0.0 (Release Candidate) | **Architecture**: Modular Monolith
 
----
-
-## Structure de la Documentation
-
-Cette documentation est divisée en modules thématiques pour faciliter la lecture et l'implémentation progressive.
-
-### Documents Principaux
-
-1. **[Vue d'Ensemble](./01-OVERVIEW.md)**
-   - Contexte camerounais
-   - Objectifs du projet
-   - Architecture globale
-   - Technologies recommandées
-
-2. **[Modules Core](./02-CORE-MODULES.md)**
-   - Gestion des Admissions & Concours
-   - Gestion des Étudiants
-   - Structure Académique
-   - Gestion des Enseignants
-
-3. **[Système de Notes & Évaluations](./03-GRADES-EVALUATIONS.md)**
-   - Types d'évaluations
-   - Calculs LMD camerounais
-   - Délibérations
-   - Bulletins et relevés
-
-4. **[Systèmes de Présences](./04-ATTENDANCE-SYSTEMS.md)**
-   - Présences étudiants (QR, NFC, Facial)
-   - Présences enseignants
-   - Méthodes détaillées avec implémentation
-   - Systeme de creation de fichie de presence journaliere, hebdomadaire et mensuel.
-   - Gestion des justifications
-
-5. **[Emploi du Temps](./05-SCHEDULING.md)**
-   - Génération automatique
-   - Gestion des contraintes
-   - Optimisation
-   - Notifications
-
-6. **[Gestion Financière](./06-FINANCE.md)**
-   - Structure des frais
-   - Mobile Money (MTN, Orange)
-   - Échéanciers et bourses
-   - Comptabilité
-
-7. **[Stages & Projets](./07-INTERNSHIPS-PROJECTS.md)**
-   - Gestion des stages
-   - Conventions tripartites
-   - Mémoires et soutenances
-   - Base entreprises
-
-8. **[Documents & Diplômes](./08-DOCUMENTS-DIPLOMAS.md)**
-   - Génération de documents
-   - Sécurité anti-fraude
-   - QR Code authentification
-   - Portail de vérification
-
-9. **[Services Campus](./09-CAMPUS-SERVICES.md)**
-   - Bibliothèque
-   - Restaurant universitaire
-   - Cité universitaire
-   - Infirmerie & Sport
-
-10. **[E-Learning & Digital](./10-ELEARNING.md)**
-    - Plateforme de cours
-    - Classes virtuelles
-    - Quiz et évaluations
-    - Analytics pédagogiques
-
-11. **[Communication & Notifications](./11-COMMUNICATIONS.md)**
-    - SMS, WhatsApp, Email
-    - Notifications push
-    - Portails utilisateurs
-    - Messagerie interne
-
-12. **[Ressources Humaines](./12-HR.md)**
-    - Personnel administratif
-    - Gestion des temps
-    - Congés et évaluations
-    - Paie
-
-13. **[Infrastructure & Patrimoine](./13-INFRASTRUCTURE.md)**
-    - Gestion des salles
-    - Équipements
-    - Maintenance
-    - Inventaire
-
-14. **[Reporting & BI](./14-REPORTING.md)**
-    - Tableaux de bord
-    - Rapports MINESUP
-    - Analytics avancés
-    - Exports
-
-15. **[Alumni & Insertion](./15-ALUMNI.md)**
-    - Réseau alumni
-    - Offres d'emploi
-    - Statistiques insertion
-    - Mentorat
-
-16. **[Sécurité & Conformité](./16-SECURITY.md)**
-    - Authentification & autorisation
-    - Audit trail
-    - RGPD / Protection données
-    - Sauvegardes
-
-17. **[Intégrations & APIs](./17-INTEGRATIONS.md)**
-    - APIs Mobile Money
-    - APIs Communication
-    - Systèmes externes
-    - API publique
-
-18. **[Application Mobile](./18-MOBILE-APP.md)**
-    - App étudiants
-    - App enseignants
-    - Technologies
-    - Mode offline
-
-19. **[Spécificités Cameroun](./19-CAMEROON-SPECIFICS.md)**
-    - Contraintes techniques
-    - Système LMD local
-    - Mobile Money
-    - Multilinguisme
-
-20. **[Architecture Technique](./20-TECHNICAL-ARCHITECTURE.md)**
-    - Stack technologique complète
-    - Monorepo Turborepo
-    - Next.js + NestJS
-    - Base de données
-
-21. **[Schéma Base de Données](./21-DATABASE-SCHEMA.md)**
-    - Modèle de données complet
-    - Relations
-    - Prisma schema
-    - Exemples de requêtes
-
-22. **[Plan d'Implémentation](./22-IMPLEMENTATION-PLAN.md)**
-    - Roadmap MVP
-    - Phases de développement
-    - Ressources nécessaires
-    - Timeline
-
-23. **[Guide de Démarrage](./23-GETTING-STARTED.md)**
-    - Setup environnement
-    - Installation
-    - Configuration
-    - Premier déploiement
+Bienvenue dans la documentation de Skooly.
+Cette documentation est la **Source de Vérité**. Si ce n'est pas écrit ici, ça n'existe pas.
 
 ---
 
-## Parcours de Lecture Recommandés
+## 🎯 1. Concepts & Vision (Le "Pourquoi")
+*À lire pour comprendre ce qu'on construit (et ce qu'on ne construit pas).*
 
-### Pour les Décideurs
-1. Vue d'Ensemble → Plan d'Implémentation → Spécificités Cameroun
-
-### Pour les Développeurs
-1. Architecture Technique → Schéma Base de Données → Guide de Démarrage
-
-### Pour les Pédagogues
-1. Modules Core → Notes & Évaluations → E-Learning
-
-### Pour les Administratifs
-1. Gestion Financière → Documents & Diplômes → Reporting
+*   **[01. Le Manifeste (Vision)](./1-concepts/01-vision.md)** : Pourquoi on ne veut pas d'un autre ERP médiocre.
+*   **[02. Philosophie d'Architecture](./1-concepts/02-architecture-philosophy.md)** : L'approche Event-Driven inspirée d'Odoo.
+*   **[03. Stratégie des Modules](./1-concepts/03-modules-strategy.md)** : Ce qui est Core vs ce qui est Bruit.
+*   **[05. Business Model (Open Core)](./1-concepts/05-open-core-strategy.md)** : Gratuit (MIT) vs Enterprise.
 
 ---
 
-## Priorisation des Modules
+## 🏗️ 2. Technique (Le "Comment")
+*La Bible pour les développeurs.*
 
-### Phase 1 - MVP (Mois 1-4)
-- Modules Core (Admissions, Étudiants, Académique)
-- Systèmes de Présences
-- Système de Notes & Évaluations
-- Emploi du Temps
-- Documents essentiels
+*   **[01. Structure du Projet](./3-technical/01-project-structure.md)** : Arborescence Turborepo stricte.
+*   **[02. Guide de Traduction Odoo](./3-technical/02-odoo-translation.md)** : Comment porter le génie d'Odoo vers NestJS.
+*   **[20. Stack Technique](./3-technical/20-stack.md)** : Next.js, NestJS, Prisma, Docker.
+*   **[21. Schema Database](./3-technical/21-database-schema.md)** : Modèles de données (Users, Finance, Academic).
 
-### Phase 2 - Extension (Mois 5-8)
-- Stages & Projets
-- Communication
+---
 
-### Phase 3 - Enrichissement (Mois 9-12)
-- E-Learning
-- Services Campus
-- Application Mobile
-- Reporting avancé
-- Gestion Financière (base + Mobile Money)
+## 📋 3. Spécifications Modules (Le "Quoi")
+*Règles métier détaillées.*
 
+### Modules CORE (Gratuit)
+*   **[02. Socle (Core)](./2-specs/02-core.md)** : Users, Auth, Multi-tenant.
+*   **[03. Académique](./2-specs/03-academic.md)** : LMD, Inscriptions.
+*   **[04. Présences](./2-specs/04-attendance.md)** : QR Code Anti-fraude.
+*   **[06. Finance](./2-specs/06-finance.md)** : Paiements Mobile Money, Compta Double Entrée.
 
-### Phase 4 - Optimisation (Mois 13+)
-- Alumni & Insertion
-- RH complète
-- Infrastructure
-- Intégrations avancées
+### Modules PREMIUM (Enterprise)
+*   **[05. Emploi du Temps](./2-specs/05-scheduling.md)** : Algorithmes de contraintes.
+*   **[07. Notes & Délibérations](./2-specs/07-grades.md)** : Calculs complexes LMD.
+*   **[08. Documents Sécurisés](./2-specs/08-documents.md)** : Diplômes certifiés QR.
+*   **[09. Stages](./2-specs/09-internships.md)** : Workflow entreprise.
+*   **[10. Communication](./2-specs/10-communication.md)** : Hub SMS/WhatsApp.
+*   **[11. Campus Services](./2-specs/11-campus.md)** : Logement, Resto.
+*   **[12. Bibliothèque](./2-specs/12-library.md)** : Prêts et Pénalités.
+*   **[13. RH & Paie](./2-specs/13-hr-payroll.md)** : Paie Vacataires.
+*   **[14. Alumni](./2-specs/14-alumni.md)** : Insertion pro.
+
+### Intelligence Artificielle
+*   **[🧠 Stratégie IA](./2-specs/AI-MODULES.md)** : Anti-fraude & Prédiction décrochage.
+
+---
+
+## 🧭 4. Guides
+*Pour démarrer.*
+
+*   **[🗺️ Parcours du Développeur](./4-guides/DEV-JOURNEY.md)** : **COMMENCE ICI**.
+*   **[README du Projet](../README.md)** : Installation rapide.
