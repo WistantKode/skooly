@@ -18,6 +18,7 @@
 
 <br />
 
+
 <img src="./assets/schoolmanagemntphoto.jpg" alt="Skooly Banner" width="850" style="border-radius: 16px; box-shadow: 0 20px 50px rgba(0,82,204,0.15);">
 
 <br />
