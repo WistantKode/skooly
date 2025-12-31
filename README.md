@@ -1,138 +1,128 @@
 <div align="center">
-  <h1>🎓 Skooly</h1>
-  <p><strong>The Open Source ERP for African Universities & Schools</strong></p>
-  
-  <p>
-    <a href="#features">Features</a> •
-    <a href="#tech-stack">Tech Stack</a> •
-    <a href="#getting-started">Getting Started</a> •
-    <a href="#documentation">Docs</a> •
-    <a href="#contributing">Contributing</a>
-  </p>
 
-  <p>
-    <img src="https://img.shields.io/badge/TypeScript-5.9-blue?style=flat-square&logo=typescript" alt="TypeScript" />
-    <img src="https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js" alt="Next.js" />
-    <img src="https://img.shields.io/badge/NestJS-11-red?style=flat-square&logo=nestjs" alt="NestJS" />
-    <img src="https://img.shields.io/badge/Turborepo-2.7-orange?style=flat-square&logo=turborepo" alt="Turborepo" />
-    <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="License" />
-  </p>
-</div>
+# 🚀 Skooly
 
----
+**L'excellence opérationnelle pour l'enseignement supérieur en Afrique.**
+*Plus qu'un ERP, Skooly est le garant de l'intégrité académique et financière de votre institution.*
 
-## 🦅 The Manifesto
+<br />
 
-**We refuse to accept that our universities, which train tomorrow's elite, are managed by yesterday's tools.**
+[![GitHub Stars](https://img.shields.io/github/stars/WistantKode/skooly?style=for-the-badge&color=0052cc)](https://github.com/WistantKode/skooly/stargazers)
+[![License](https://img.shields.io/badge/License-MIT+%20Enterprise-8e44ad?style=for-the-badge)](./LICENSE)
+[![Forks](https://img.shields.io/github/forks/WistantKode/skooly?style=for-the-badge&color=2ecc71)](https://github.com/WistantKode/skooly/network/members)
+[![Status](https://img.shields.io/badge/Status-Alpha-orange?style=for-the-badge)](https://github.com/WistantKode/skooly)
 
-Skooly is not just school management software. It is an **Infrastructure**.
-It's built on a radical philosophy: **Traceability is sacred**. We don't just store the current state (e.g., "Registered"), we store the facts (Events) that led there.
+<br />
 
-> "I don't ship code. I ship administrative dignity."
+[📖 Découvrir la Documentation](./docs/00-INDEX.md) · [⚡ Démarrage Rapide](#démarrage-rapide) · [🛠️ Espace Développeur](./docs/4-guides/DEV-JOURNEY.md)
 
-[📖 Read the full Vision](./docs/1-concepts/01-vision.md)
+<br />
+
+
+<img src="./assets/schoolmanagemntphoto.jpg" alt="Skooly Banner" width="850" style="border-radius: 16px; box-shadow: 0 20px 50px rgba(0,82,204,0.15);">
+
+<br />
 
 ---
 
-## ✨ Features
+### 🛠️ Built With
 
-### 🧱 Core (Community Edition - MIT)
-*   **Identity Management**: Strict separation between User (Login) and Partner (Profile).
-*   **Academic Structure**: Full support for LMD (Licence-Master-Doctorat) hierarchy.
-*   **Enrollment Workflow**: From Draft to Validated to Paid.
-*   **Basic Attendance**: QR Code scanning logic.
-
-### 💎 Enterprise (Premium Extensions)
-*   **💰 Finance & Mobile Money**: Native integration with MTN/Orange Money. Double-entry accounting.
-*   **📍 Anti-Fraud Attendance**: Rotating TOTP QR Codes + Geolocation fencing.
-*   **📊 Grades & Deliberations**: Complex grade calculation, compensation rules, and locked jury minutes.
-*   **📜 Secure Documents**: Diplomas signed with private keys and verifiable via QR.
-*   **🧠 AI Assistant**: Dropout prediction and Computer Vision for document fraud.
+![](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
+![](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
+![](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 
 ---
 
-## 🛠️ Tech Stack
+<br />
 
-We chose robustness over hype.
+## Redéfinir la Gestion Académique
 
-*   **Monorepo**: Turborepo (Isolated builds)
-*   **Backend**: NestJS (Modular Architecture, strong injection)
-*   **Frontend**: Next.js App Router (Server Components for performance)
-*   **Database**: PostgreSQL + Prisma (Type-safety from DB to UI)
-*   **Infrastructure**: Docker + Redis (Queue management)
+*Skooly a été conçu pour ceux qui exigent la précision. Nous transformons le chaos des registres papiers et des fichiers Excel en une infrastructure numérique infaillible.*
 
-[📖 Read the Architecture Decision Record](./docs/3-technical/20-stack.md)
+<br />
 
----
+### L'Intégrité Financière Sans Compromis
 
-## 🚀 Getting Started
+Oubliez la fraude aux reçus et les incertitudes de trésorerie. Skooly fusionne les flux bancaires officiels et le Mobile Money dans un ledger à partie double où **la banque est la seule source de vérité**. Chaque centime est traçable, chaque paiement est authentique.
 
-We have prepared a specific journey for developers to understand the "Skooly Way" (Event-Driven).
+### Maîtrise Totale du Système LMD
 
-### 1. Prerequisites
-- Node.js 18+
-- pnpm 8+
-- Docker
+Le moteur de délibération de Skooly n'est pas une simple calculatrice. C'est un gardien algorithmique qui applique avec une précision chirurgicale les normes de compensation, de validation de crédits et de gestion des dettes académiques de la zone CEMAC.
 
-### 2. Installation
+### L'Empire Universitaire Connecté
+
+Pilotez un groupe d'écoles comme une entité unique. L'architecture multi-tenant de Skooly permet aux rectorats de consolider les données de plusieurs instituts autonomes tout en garantissant une isolation opérationnelle stricte. C'est la puissance d'une holding logicielle.
+
+### La Souveraineté Sans Limites
+
+La technologie doit s'adapter au terrain, pas l'inverse. Grâce à son architecture **Offline-first**, Skooly reste votre outil de travail même quand le réseau s'arrête. Vos certificats et diplômes sont protégés par une signature cryptographique, rendant toute falsification impossible.
+
+<br />
+
+## Excellence Technologique (Stack Details)
+
+| Composant | Technologie | Identité & Documentation |
+| :--- | :--- | :--- |
+| **Logic** | NestJS / TypeScript | [![](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/) |
+| **Interface** | Next.js / React | [![](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/) |
+| **Data** | PostgreSQL / Prisma | [![](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/) |
+| **Performance** | Redis / BullMQ | [![](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/) |
+| **Infrastructure** | Docker / Turborepo | [![](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) |
+
+<br />
+
+## Démarrage Rapide
+
+### Pré-requis
+
+Node.js v20+ · pnpm v9+ · Docker
+
+### Commande de Lancement
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/skooly.git
-cd skooly
-
-# Install dependencies
-pnpm install
-
-# Start Infrastructure (Postgres, Redis)
-docker-compose up -d
-
-# Sync Database
-pnpm db:push
-
-# Launch Development Server
-pnpm dev
+git clone https://github.com/WistantKode/skooly.git && cd skooly && pnpm install && pnpm dev
 ```
 
-### 3. Your First Step
-Don't just dive into the code. Read the **Developer Journey** guide first.
+<br />
 
-[🗺️ Start the Developer Journey](./docs/4-guides/DEV-JOURNEY.md)
+## Impact et Communauté
 
----
+<a href="https://github.com/WistantKode/skooly/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=WistantKode/skooly" alt="Contributors" />
+</a>
 
-## 📖 Documentation Structure
+<br />
 
-Our documentation is authoritative and structured in 4 layers:
+**[WistantKode](https://github.com/WistantKode)**
+*Architecturer l'Éducation de Demain*
 
-1.  **[Concepts](./docs/1-concepts)**: Vision, Architecture, Business Model.
-2.  **[Specifications](./docs/2-specs)**: Deep dive into every module (Finance, Grades, AI...).
-3.  **[Technical](./docs/3-technical)**: Code structure, Odoo translation guide.
-4.  **[Guides](./docs/4-guides)**: Onboarding and tutorials.
+<br />
 
-[📂 Browse full documentation](./docs/00-INDEX.md)
+## Analyse et Métriques du Projet
 
----
+<br />
 
-## 🤝 Contributing
+| Métrique | État / Valeur |
+| :--- | :--- |
+| **Modules Spécifiés** | 23 Unités Métiers |
+| **Conformité LMD** | 100% (CEMAC Standards) |
+| **Architecture** | Monolithe Modulaire |
+| **Sécurité** | Audit Trail & Signature Cryptographique |
+| **Hébergement** | Hybride (Cloud / On-Premise) |
 
-We welcome contributions!
-Please read our [Technical Architecture](./docs/3-technical/01-project-structure.md) before submitting a PR.
-We enforce strict boundaries between modules.
+<br />
 
----
+### Activité du Repository
 
-## 📜 License
+![](https://img.shields.io/github/last-commit/WistantKode/skooly?style=for-the-badge&logo=git&color=black)
+![](https://img.shields.io/github/languages/top/WistantKode/skooly?style=for-the-badge&logo=typescript&color=black)
+![](https://img.shields.io/github/directory-file-count/WistantKode/skooly/docs?style=for-the-badge&label=DOCS&color=black)
 
-This project is licensed under the **MIT License**.
-See [Open Core Strategy](./docs/1-concepts/05-open-core-strategy.md) for details on the Enterprise edition.
+<br />
 
----
+© 2025 WistantKode. [Gouvernance & Conformité](./docs/1-concepts/06-compliance.md)
 
-<div align="center">
-  <p>Built with ❤️ for African Education</p>
-  <p>
-    <a href="https://skooly.io">Website</a> •
-    <a href="https://twitter.com/skooly">Twitter</a>
-  </p>
 </div>

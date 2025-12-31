@@ -1,54 +1,39 @@
-# 💰 Module Finance : La Comptabilité à Double Entrée
+# Spécification Module Finance : Comptabilité & Paiements
 
-## La Philosophie Odoo appliquée aux Frais Scolaires
+## 1. Le Problème
+La gestion financière est le point critique.
+*   **Fraude** : Reçus falsifiés, argent liquide "perdu", collusions.
+*   **Complexité** : Réconciliation entre les paiements bancaires (UBA), le Mobile Money, et la comptabilité.
+*   **Suivi** : Impossible de savoir en temps réel "Qui doit quoi".
 
-Oubliez la table `payments` avec une colonne `status`. C'est amateur.
-Dans Skooly (comme dans Odoo), **TOUT est une écriture comptable (`Journal Entry`)**.
+## 2. La Solution : Système Hybride & Comptabilité Double Entrée
 
-## Entités Principales ("Models")
+### A. Modèle de Paiement Hybride
+Skooly s'adapte à la réalité locale du "Guichet Unique".
+Voir le détail dans `06-finance.md` (qui est déjà bien structuré, je vais juste le nettoyer).
 
-### 1. `Invoice` (Facture - `account.move`)
-Une inscription en L1 génère une FACTURE.
-*   **Débit** : Compte Client (Étudiant X) -> 50,000 FCFA
-*   **Crédit** : Compte Produit (Scolarité) -> 50,000 FCFA
-*   **Status** : `DRAFT` -> `POSTED` (Validé) -> `PAID` (Soldé).
+1.  **Gros Montants (Scolarité)** : Via Banque (UBA).
+    *   L'étudiant paie à la banque.
+    *   Skooly importe le relevé bancaire.
+    *   Réconciliation automatique par Matricule ou ID Transaction.
+2.  **Petits Montants (Frais)** : Via Mobile Money (API native).
+    *   Confirmation instantanée.
 
-### 2. `Payment` (Paiement - `account.payment`)
-Quand MTN Mobile Money nous envoie de l'argent.
-*   **Débit** : Compte Banque (MTN MoMo) -> 50,000 FCFA
-*   **Crédit** : Compte Client (Étudiant X) -> 50,000 FCFA
+### B. Comptabilité à Partie Double (Ledger)
+Nous ne stockons pas juste "Payé = Oui". Nous générons des écritures comptables réelles.
+Chaque transaction impacte deux comptes :
+*   *Facturation* : Crédit "Produit Scolarité" / Débit "Compte Recevable Étudiant".
+*   *Paiement* : Crédit "Compte Recevable Étudiant" / Débit "Banque".
 
-### 3. La Réconciliation (Le Magie)
-Au départ, la facture est "Impayée".
-Le paiement est "Non lettré".
-Le système lie les deux : `Invoice.amount_residual` devient 0. La facture passe à **PAID**.
+*Avantage* : Auditabilité totale et export facile vers les logiciels comptables (Sage).
 
-## Intégration Mobile Money (MTN / Orange)
+### C. Recouvrement Automatisé (Dunning)
+Le système gère la relance des impayés.
+*   **J-7** : SMS de rappel avant échéance.
+*   **J+1** : SMS de retard + Pénalité (configurable).
+*   **J+30** : Blocage automatique des services (Accès notes, Réinscriptions).
 
-### Le Problème de la Réalité
-L'API MTN peut dire "Succès", mais l'argent n'est pas là. Ou l'inverse.
-Skooly utilise un **Journal de Transition**.
-
-1.  **RequestToPay** : On crée un paiement en statut `PENDING`.
-2.  **Webhook** : MTN appelle Skooly -> "Transaction X Réussie".
-3.  **Validation** : Skooly passe le paiement à `POSTED` et réconcilie la facture.
-
-### Gestion de l'Échec
-Si MTN échoue, le paiement passe à `REJECTED`. La facture reste `OPEN`.
-L'étudiant voit toujours "Impayé".
-
-## Pourquoi c'est mieux ?
-*   **Audit** : On sait exactement combien d'argent est "En cours chez MTN" vs "En banque".
-*   **Tranches** : Si l'étudiant paie 20,000 sur 50,000, la facture reste `OPEN` avec un résiduel de 30,000. C'est natif.
-
-## Code Snippet (Structure)
-
-```typescript
-interface JournalEntry {
-  id: string;
-  type: 'invoice' | 'payment';
-  date: Date;
-  lines: JournalItem[]; // Débit/Crédit
-  state: 'draft' | 'posted';
-}
-```
+## 3. Modèle de Données
+*   `Invoice`, `InvoiceLine`.
+*   `Payment` (Method: CASH, BANK, MOMO).
+*   `LedgerEntry` (Debit, Credit, Account).
