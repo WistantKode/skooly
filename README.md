@@ -1,94 +1,97 @@
-# <div align="center">Skooly : L'OS des Universités Modernes</div>
-
 <div align="center">
-  <img src="./assets/schoolmanagemntphoto.jpg" alt="Skooly Banner" width="1000" style="border-radius: 20px;">
-  <br />
-  <br />
-  <strong>Le premier ERP modulaire, souverain et offline-first conçu pour l'Afrique.</strong>
-  <br />
-  <sub>Digitaliser l'éducation, sécuriser les diplômes et optimiser la finance académique.</sub>
-  <br />
-  <br />
-  <a href="https://github.com/WistantKode/skooly/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/WistantKode/skooly?style=for-the-badge&color=blue"></a>
-  <a href="./LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT+%20Enterprise-magenta?style=for-the-badge"></a>
-  <a href="https://github.com/WistantKode/skooly/network/members"><img alt="GitHub forks" src="https://img.shields.io/github/forks/WistantKode/skooly?style=for-the-badge&color=green"></a>
-  <br />
-  <br />
-  <a href="./docs/00-INDEX.md">📖 Documentation</a> · <a href="#-démarrage-rapide">⚡ Quick Start</a> · <a href="./docs/4-guides/DEV-JOURNEY.md">🛠️ Guide Dev</a>
-</div>
+
+# Skooly : Système d'Exploitation Universitaire
+
+<img src="./assets/schoolmanagemntphoto.jpg" alt="Skooly Banner" width="1000" style="border-radius: 12px;">
 
 <br />
 
-<div align="center">
-  <img src="./assets/erp.jpg" alt="Skooly Dashboard Showcase" width="1000" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-</div>
+**L'infrastructure logicielle souveraine pour l'enseignement supérieur en Afrique.**
 
 <br />
 
-## ✨ Pourquoi Skooly ?
+[![GitHub Stars](https://img.shields.io/github/stars/WistantKode/skooly?style=flat-square&color=black)](https://github.com/WistantKode/skooly/stargazers)
+[![License](https://img.shields.io/badge/License-MIT+%20Enterprise-black?style=flat-square)](./LICENSE)
+[![Forks](https://img.shields.io/github/forks/WistantKode/skooly?style=flat-square&color=black)](https://github.com/WistantKode/skooly/network/members)
 
-Skooly résout les défis critiques des institutions d'enseignement supérieur en zone CEMAC :
+<br />
 
-- **Moteur LMD Natif** : Automatisation complète des délibérations, compensations et calculs de crédits.
-- **Inclusion Financière** : Réconciliation automatique UBA et Mobile Money (MTN/Orange) pour éliminer la fraude.
-- **Souveraineté des Données** : Certification des documents par signature numérique et QR Code infalsifiable.
-- **Mode Offline** : Fonctionnement ininterrompu même en cas d'internet instable grâce à la technologie PWA.
+[📖 Documentation](./docs/00-INDEX.md) · [⚡ Démarrage Rapide](#démarrage-rapide) · [🛠️ Guide Développeur](./docs/4-guides/DEV-JOURNEY.md)
 
-## 🚀 Fonctionnalités Clés
+<br />
 
-- **Gestion des Inscriptions** : Workflow digitalisé du recrutement à la carte d'étudiant.
-- **Finance & Comptabilité** : Gestion des droits universitaires avec ledger à partie double.
-- **Saisie & Délibération** : Interface de saisie rapide pour enseignants et PV de délibération en 1 clic.
-- **Multi-Campus Hierarchy** : Structure "Holding" pour piloter plusieurs écoles au sein d'une université.
-- **IA Sentinel** : Détection de fraude aux notes et prédiction précoce du décrochage scolaire.
+<img src="./assets/erp.jpg" alt="Skooly Interface" width="1000" style="border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.1);">
 
-## 🛠️ Stack Technologique
+<br />
 
-Skooly utilise une architecture **Modular Monolith** moderne, performante et typée.
+## Atouts Stratégiques
 
-| Composant | Technologie |
-| :--- | :--- |
-| **Backend** | NestJS, TypeScript, BullMQ |
-| **Frontend** | Next.js (App Router), TailwindCSS, Shadcn/UI |
-| **Persistence** | PostgreSQL, Prisma ORM, Redis |
-| **Infrastructure** | Turborepo, Docker, GitHub Actions |
+Contrairement aux solutions génériques, Skooly est architecturé pour les réalités du terrain camerounais et de la zone CEMAC.
 
-## 📦 Démarrage Rapide
+### 1. Moteur LMD Algorithmique
+Automatisation stricte des délibérations selon les normes LMD : calcul des crédits, compensations inter-UE et gestion des dettes académiques.
+
+### 2. Réconciliation Bancaire Native
+Double intégration UBA (fichiers de flux) et Mobile Money (API). La banque est la seule source de vérité, éliminant toute tentative de fraude aux reçus.
+
+### 3. Architecture Multi-Niveaux
+Structure de Tenant hiérarchique permettant à une Université (ex: UD) de piloter plusieurs instituts (IUT, ENSET) avec une consolidation globale des données.
+
+### 4. Résilience Offline (PWA)
+Fonctionnement ininterrompu en zone blanche ou signal instable. Les données sont synchronisées automatiquement dès le retour du réseau.
+
+### 5. Certification Numérique
+Signature cryptographique et QR Code de vérification publique pour chaque relevé de notes et diplôme émis.
+
+<br />
+
+## Stack Technologique
+
+| Composant | Technologie | Icône & Lien |
+| :--- | :--- | :--- |
+| **Backend** | NestJS | [![](https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white)](https://nestjs.com/) |
+| **Frontend** | Next.js | [![](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/) |
+| **Database** | PostgreSQL | [![](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/) |
+| **ORM** | Prisma | [![](https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white)](https://www.prisma.io/) |
+| **Styling** | TailwindCSS | [![](https://img.shields.io/badge/TailwindCSS-06B6D4?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/) |
+| **Cache** | Redis | [![](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white)](https://redis.io/) |
+
+<br />
+
+## Démarrage Rapide
 
 ### Pré-requis
-*   Node.js v20+
-*   pnpm v9+
-*   Docker & Docker Compose
+Node.js v20+ · pnpm v9+ · Docker
 
 ### Installation
 ```bash
-# Cloner le projet
 git clone https://github.com/WistantKode/skooly.git
 cd skooly
-
-# Installer les dépendances
 pnpm install
-
-# Démarrer les services (Database & App)
 pnpm dev
 ```
 
-## 🤝 Contributeurs
+<br />
 
-Nous croyons en la force de la communauté pour transformer l'éducation.
+## Communauté et Maintenance
 
 <a href="https://github.com/WistantKode/skooly/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=WistantKode/skooly" />
+  <img src="https://contrib.rocks/image?repo=WistantKode/skooly" alt="Contributors" />
 </a>
 
-## 👤 Maintainer
+<br />
 
-**[WistantKode](https://github.com/WistantKode)** — Architecte & Lead Developer
+**[WistantKode](https://github.com/WistantKode)**
+*Lead Architect*
 
-## 📊 Statistiques
+<br />
+
+## Statistiques du Projet
 
 ![Repobeats analytics](https://repobeats.axiom.co/api/embed/b1bf4dc0226458617adbdbf5586f2df953eb0922.svg 'Repobeats analytics image')
 
-## 📄 Licence
+<br />
 
-[MIT (Core)](https://github.com/WistantKode/skooly/blob/main/LICENSE) & Enterprise (Business Units) — © 2024 WistantKode.
+© 2024 WistantKode. [Mentions Légales](./docs/1-concepts/06-compliance.md)
+
+</div>
