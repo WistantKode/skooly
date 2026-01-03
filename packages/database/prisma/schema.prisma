@@ -1,0 +1,487 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+// State Machines & Types
+
+enum UserStatus {
+    PENDING
+    ACTIVE
+    SUSPENDED
+    DELETED
+}
+
+enum PartnerType {
+    STUDENT
+    TEACHER
+    STAFF
+    PARENT
+    SUPPLIER
+    OTHER
+}
+
+enum Gender {
+    MALE
+    FEMALE
+    OTHER
+}
+
+enum EnrollmentStatus {
+    DRAFT
+    SUBMITTED
+    VALIDATED
+    REGISTERED
+    REJECTED
+    CANCELLED
+}
+
+enum InvoiceStatus {
+    DRAFT
+    OPEN
+    PAID
+    PARTIAL
+    CANCELLED
+    REFUNDED
+}
+
+enum TransactionStatus {
+    PENDING
+    SUCCESS
+    FAILED
+    REVERSED
+}
+
+enum TransactionSource {
+    UBA_BANK
+    MOBILE_MONEY_MTN
+    MOBILE_MONEY_ORANGE
+    CASH
+}
+
+enum AuditAction {
+    CREATE
+    UPDATE
+    DELETE
+}
+
+enum AttendanceStatus {
+    PRESENT
+    ABSENT
+    LATE
+    EXCUSED
+}
+
+enum SubjectType {
+    FONDAMENTALE
+    TRANSVERSALE
+    OPTIONNELLE
+}
+
+// Multi-tenancy
+
+model Organization {
+    id        String   @id @default(uuid())
+    name      String   @unique
+    legalName String?
+    taxId     String?
+    logoUrl   String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    tenants   Tenant[]
+}
+
+model Tenant {
+    id             String       @id @default(uuid())
+    organizationId String
+    organization   Organization @relation(fields: [organizationId], references: [id])
+    name           String
+    code           String       @unique // e.g., "IUT", "ENSET"
+    domain         String?      @unique
+    currency       String       @default("XAF")
+    timeZone       String       @default("Africa/Douala")
+    logoUrl        String?
+    config         Json? // Specific tenant settings
+
+    partners      Partner[]
+    academicYears AcademicYear[]
+    departments   Department[]
+    invoices      Invoice[]
+    transactions  BankTransaction[]
+    auditLogs     AuditLog[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// Identity & Access Management
+
+model Partner {
+    id        String        @id @default(uuid())
+    tenantId  String
+    tenant    Tenant        @relation(fields: [tenantId], references: [id])
+    firstName String
+    lastName  String
+    email     String?
+    phone     String?
+    address   String?
+    photoUrl  String?
+    gender    Gender?
+    birthDate DateTime?
+    types     PartnerType[] @default([OTHER])
+
+    user    User? // Link to Auth account
+    student Student? // Specific student data
+    teacher Teacher? // Specific teacher data
+
+    auditLogs AuditLog[] @relation("Actor")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([tenantId, email])
+}
+
+model User {
+    id               String     @id @default(uuid())
+    partnerId        String     @unique
+    partner          Partner    @relation(fields: [partnerId], references: [id])
+    username         String     @unique
+    passwordHash     String
+    status           UserStatus @default(ACTIVE)
+    twoFactorEnabled Boolean    @default(false)
+    roles            UserRole[]
+    sessions         Session[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Session {
+    id        String   @id @default(uuid())
+    userId    String
+    user      User     @relation(fields: [userId], references: [id])
+    token     String   @unique
+    expiresAt DateTime
+    userAgent String?
+    ipAddress String?
+    createdAt DateTime @default(now())
+}
+
+model Role {
+    id          String       @id @default(uuid())
+    name        String       @unique
+    permissions Permission[] @relation("RoleToPermission")
+    users       UserRole[]
+}
+
+model Permission {
+    id    String @id @default(uuid())
+    code  String @unique // e.g., "grades:edit", "finance:view"
+    roles Role[] @relation("RoleToPermission")
+}
+
+model UserRole {
+    userId String
+    roleId String
+    user   User   @relation(fields: [userId], references: [id])
+    role   Role   @relation(fields: [roleId], references: [id])
+
+    @@id([userId, roleId])
+}
+
+// Academic Structure (LMD)
+
+model AcademicYear {
+    id        String   @id @default(uuid())
+    tenantId  String
+    tenant    Tenant   @relation(fields: [tenantId], references: [id])
+    name      String // e.g., "2024-2025"
+    startDate DateTime
+    endDate   DateTime
+    isActive  Boolean  @default(false)
+
+    enrollments Enrollment[]
+    semesters   Semester[]
+    invoices    Invoice[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Semester {
+    id             String       @id @default(uuid())
+    academicYearId String
+    academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+    name           String // e.g., "Semestre 1"
+    number         Int
+    startDate      DateTime
+    endDate        DateTime
+    subjects       Subject[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Department {
+    id       String    @id @default(uuid())
+    tenantId String
+    tenant   Tenant    @relation(fields: [tenantId], references: [id])
+    name     String
+    code     String // e.g., "GI"
+    programs Program[]
+}
+
+model Program {
+    id           String     @id @default(uuid())
+    departmentId String
+    department   Department @relation(fields: [departmentId], references: [id])
+    name         String // e.g., "Licence Tech Informatique"
+    code         String
+    duration     Int // Years
+    levels       Level[]
+}
+
+model Level {
+    id          String       @id @default(uuid())
+    programId   String
+    program     Program      @relation(fields: [programId], references: [id])
+    name        String // e.g., "Niveau 1"
+    levelNumber Int
+    enrollments Enrollment[]
+    subjects    Subject[]
+    classes     ClassGroup[]
+}
+
+model Subject {
+    id          String      @id @default(uuid())
+    levelId     String
+    level       Level       @relation(fields: [levelId], references: [id])
+    semesterId  String
+    semester    Semester    @relation(fields: [semesterId], references: [id])
+    name        String
+    code        String
+    credits     Int
+    coefficient Float       @default(1.0)
+    type        SubjectType @default(FONDAMENTALE)
+
+    teachers    TeacherSubject[]
+    grades      Grade[]
+    attendances Attendance[]
+
+    prerequisites SubjectPreRequisite[] @relation("Prereq")
+    requiredFor   SubjectPreRequisite[] @relation("ReqFor")
+}
+
+model SubjectPreRequisite {
+    subjectId      String
+    prerequisiteId String
+    subject        Subject @relation("ReqFor", fields: [subjectId], references: [id])
+    prerequisite   Subject @relation("Prereq", fields: [prerequisiteId], references: [id])
+
+    @@id([subjectId, prerequisiteId])
+}
+
+model ClassGroup {
+    id          String       @id @default(uuid())
+    levelId     String
+    level       Level        @relation(fields: [levelId], references: [id])
+    name        String // e.g., "Groupe A"
+    enrollments Enrollment[]
+}
+
+// Students & Enrollments
+
+model Student {
+    id          String       @id @default(uuid())
+    partnerId   String       @unique
+    partner     Partner      @relation(fields: [partnerId], references: [id])
+    matricule   String       @unique
+    enrollments Enrollment[]
+}
+
+model Enrollment {
+    id             String           @id @default(uuid())
+    studentId      String
+    student        Student          @relation(fields: [studentId], references: [id])
+    levelId        String
+    level          Level            @relation(fields: [levelId], references: [id])
+    classGroupId   String?
+    classGroup     ClassGroup?      @relation(fields: [classGroupId], references: [id])
+    academicYearId String
+    academicYear   AcademicYear     @relation(fields: [academicYearId], references: [id])
+    status         EnrollmentStatus @default(DRAFT)
+
+    invoices    Invoice[]
+    grades      Grade[]
+    attendances Attendance[]
+
+    files File[] // Docs uploaded during enrollment
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// Teachers & Staff
+
+model Teacher {
+    id           String           @id @default(uuid())
+    partnerId    String           @unique
+    partner      Partner          @relation(fields: [partnerId], references: [id])
+    departmentId String?
+    subjects     TeacherSubject[]
+}
+
+model TeacherSubject {
+    teacherId String
+    subjectId String
+    teacher   Teacher @relation(fields: [teacherId], references: [id])
+    subject   Subject @relation(fields: [subjectId], references: [id])
+
+    @@id([teacherId, subjectId])
+}
+
+// Education Engine
+
+model Grade {
+    id            String     @id @default(uuid())
+    enrollmentId  String
+    enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
+    subjectId     String
+    subject       Subject    @relation(fields: [subjectId], references: [id])
+    value         Float? // Null if not yet entered
+    isValidated   Boolean    @default(false)
+    anonymityCode String? // For the secret decoding process
+
+    auditLogs AuditLog[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([enrollmentId, subjectId])
+}
+
+model Attendance {
+    id              String           @id @default(uuid())
+    enrollmentId    String
+    enrollment      Enrollment       @relation(fields: [enrollmentId], references: [id])
+    subjectId       String
+    subject         Subject          @relation(fields: [subjectId], references: [id])
+    date            DateTime
+    status          AttendanceStatus @default(PRESENT)
+    latitude        Float?
+    longitude       Float?
+    deviceId        String?
+    signedByTeacher Boolean          @default(false)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// Financial Hub
+
+model Invoice {
+    id             String        @id @default(uuid())
+    tenantId       String
+    tenant         Tenant        @relation(fields: [tenantId], references: [id])
+    enrollmentId   String?
+    enrollment     Enrollment?   @relation(fields: [enrollmentId], references: [id])
+    academicYearId String
+    academicYear   AcademicYear  @relation(fields: [academicYearId], references: [id])
+    number         String        @unique // INV-2024-XXXX
+    amount         Float
+    amountPaid     Float         @default(0)
+    status         InvoiceStatus @default(DRAFT)
+    dueDate        DateTime?
+
+    lines           InvoiceLine[]
+    reconciliations Reconciliation[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model InvoiceLine {
+    id        String  @id @default(uuid())
+    invoiceId String
+    invoice   Invoice @relation(fields: [invoiceId], references: [id])
+    label     String
+    amount    Float
+}
+
+model BankTransaction {
+    id              String            @id @default(uuid())
+    tenantId        String
+    tenant          Tenant            @relation(fields: [tenantId], references: [id])
+    source          TransactionSource
+    externalRef     String? // Reference from Bank/Momo
+    amount          Float
+    senderName      String?
+    senderPhone     String?
+    rawLabel        String? // Messy text from bank
+    status          TransactionStatus @default(SUCCESS)
+    transactionDate DateTime
+
+    reconciliations Reconciliation[]
+
+    createdAt DateTime @default(now())
+}
+
+model Reconciliation {
+    id              String          @id @default(uuid())
+    invoiceId       String
+    invoice         Invoice         @relation(fields: [invoiceId], references: [id])
+    transactionId   String
+    transaction     BankTransaction @relation(fields: [transactionId], references: [id])
+    amount          Float // applied to this invoice
+    isVerifiedByIA  Boolean         @default(false)
+    confidenceScore Float?
+
+    createdAt DateTime @default(now())
+}
+
+// Storage (S3/MinIO)
+
+model File {
+    id           String      @id @default(uuid())
+    enrollmentId String?
+    enrollment   Enrollment? @relation(fields: [enrollmentId], references: [id])
+    url          String
+    key          String // S3 Key
+    bucket       String
+    mimeType     String
+    size         Int
+    hash         String? // For integrity check
+    label        String? // e.g., "Diplôme de Bac"
+
+    createdAt DateTime @default(now())
+}
+
+// Audit & Logging
+
+model AuditLog {
+    id         String      @id @default(uuid())
+    tenantId   String
+    tenant     Tenant      @relation(fields: [tenantId], references: [id])
+    actorId    String?
+    actor      Partner?    @relation("Actor", fields: [actorId], references: [id])
+    action     AuditAction
+    entityName String // e.g., "Grade", "Invoice"
+    entityId   String
+    oldData    Json?
+    newData    Json?
+    ipAddress  String?
+    userAgent  String?
+
+    // Custom links for easier direct joins
+    gradeId String?
+    grade   Grade?  @relation(fields: [gradeId], references: [id])
+
+    createdAt DateTime @default(now())
+}

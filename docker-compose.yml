@@ -1,0 +1,67 @@
+services:
+  # Database - PostgreSQL (The source of truth)
+  postgres:
+    image: postgres:17-alpine
+    container_name: skooly-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-skooly_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - skooly-db-data:/var/lib/postgresql/data
+      - ./deployment/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - skooly-network
+
+  # Cache & PubSub - Redis
+  redis:
+    image: redis:7-alpine
+    container_name: skooly-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - skooly-redis-data:/data
+    networks:
+      - skooly-network
+
+  # Object Storage - MinIO (Self-hosted S3)
+  minio:
+    image: minio/minio:latest
+    container_name: skooly-minio
+    restart: always
+    ports:
+      - "9000:9000" # API
+      - "9001:9001" # Console
+    environment:
+      MINIO_ROOT_USER: ${STORAGE_USER:-admin}
+      MINIO_ROOT_PASSWORD: ${STORAGE_PASSWORD:-password}
+    command: server /data --console-address ":9001"
+    volumes:
+      - skooly-storage-data:/data
+    networks:
+      - skooly-network
+
+  # Placeholder for API (to be built)
+  # api:
+  #   build:
+  #     context: .
+  #     dockerfile: deployment/docker/Dockerfile.api
+  #   container_name: skooly-api
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #   networks:
+  #     - skooly-network
+
+networks:
+  skooly-network:
+    driver: bridge
+
+volumes:
+  skooly-db-data:
+  skooly-redis-data:
+  skooly-storage-data:
