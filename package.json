@@ -9,6 +9,9 @@
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
+    "@prisma/config": "^7.2.0",
+    "@types/node": "^25.0.3",
+    "@types/pg": "^8.11.0",
     "prettier": "^3.7.4",
     "turbo": "^2.7.2",
     "typescript": "5.9.2"
