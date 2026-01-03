@@ -1,0 +1,2 @@
+-- Custom PostgreSQL configuration or initialization scripts
+-- e.g., CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
